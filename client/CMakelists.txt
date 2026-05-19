@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.10)
+project(UsbMonitorService)
+
+# 设置 C++ 标准
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# 强制定义 Unicode，确保所有 Windows API 宏展开为 W 后缀版本
+add_compile_definitions(UNICODE _UNICODE)
+
+# 源码文件
+set(SOURCES
+    src/main.cpp
+    src/service.cpp
+    include/service.h
+)
+
+# 生成可执行文件
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+# 【核心修改】将 include 目录添加到头文件搜索路径中
+# CMAKE_CURRENT_SOURCE_DIR 指的是当前 CMakeLists.txt 所在的目录
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# 链接 Windows 基础库
+target_link_libraries(${PROJECT_NAME} PRIVATE advapi32 user32)
